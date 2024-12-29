@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 100
+
+void fcfsDiskScheduling(int requests[], int n, int start) {
+    int totalMovement = 0;
+    int current = start;
+
+    printf("Disk Access Order:\n");
+    for (int i = 0; i < n; i++) {
+        printf("From %d to %d\n", current, requests[i]);
+        totalMovement += abs(requests[i] - current);
+        current = requests[i];
+    }
+
+    printf("\nTotal Head Movement: %d cylinders\n", totalMovement);
+}
+
+int main() {
+    // Input embedded in the code
+    int n = 8; // Number of disk requests
+    int requests[] = {95, 180, 34, 119, 11, 123, 62, 64};
+    int start = 50; // Starting position of the disk head
+
+    printf("Initial Head Position: %d\n", start);
+    printf("Disk Requests: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", requests[i]);
+    }
+    printf("\n");
+
+    // Simulate FCFS disk scheduling
+    fcfsDiskScheduling(requests, n, start);
+
+    return 0;
+}
