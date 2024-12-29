@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_REQUESTS 100
+
+void scanDiskScheduling(int requests[], int n, int start, int direction, int diskSize) {
+    int totalMovement = 0;
+    int current = start;
+
+    // Sort the requests array
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (requests[j] > requests[j + 1]) {
+                int temp = requests[j];
+                requests[j] = requests[j + 1];
+                requests[j + 1] = temp;
+            }
+        }
+    }
+
+    printf("Disk Access Order:\n");
+    if (direction == 1) { // Moving towards the higher end
+        for (int i = 0; i < n; i++) {
+            if (requests[i] >= start) {
+                printf("From %d to %d\n", current, requests[i]);
+                totalMovement += abs(requests[i] - current);
+                current = requests[i];
+            }
+        }
+        if (current < diskSize - 1) { // Move to the end of the disk
+            printf("From %d to %d\n", current, diskSize - 1);
+            totalMovement += abs(diskSize - 1 - current);
+            current = diskSize - 1;
+        }
+        for (int i = n - 1; i >= 0; i--) {
+            if (requests[i] < start) {
+                printf("From %d to %d\n", current, requests[i]);
+                totalMovement += abs(requests[i] - current);
+                current = requests[i];
+            }
+        }
+    } else { // Moving towards the lower end
+        for (int i = n - 1; i >= 0; i--) {
+            if (requests[i] <= start) {
+                printf("From %d to %d\n", current, requests[i]);
+                totalMovement += abs(requests[i] - current);
+                current = requests[i];
+            }
+        }
+        if (current > 0) { // Move to the start of the disk
+            printf("From %d to %d\n", current, 0);
+            totalMovement += abs(current - 0);
+            current = 0;
+        }
+        for (int i = 0; i < n; i++) {
+            if (requests[i] > start) {
+                printf("From %d to %d\n", current, requests[i]);
+                totalMovement += abs(requests[i] - current);
+                current = requests[i];
+            }
+        }
+    }
+
+    printf("\nTotal Head Movement: %d cylinders\n", totalMovement);
+}
+
+int main() {
+    // Input embedded in the code
+    int n = 8; // Number of disk requests
+    int requests[] = {95, 180, 34, 119, 11, 123, 62, 64};
+    int start = 50; // Starting position of the disk head
+    int direction = 1; // 1 for up, 0 for down
+    int diskSize = 200; // Total size of the disk
+
+    printf("Initial Head Position: %d\n", start);
+    printf("Disk Requests: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", requests[i]);
+    }
+    printf("\nDirection: %s\n", direction == 1 ? "Up" : "Down");
+
+    // Simulate SCAN disk scheduling
+    scanDiskScheduling(requests, n, start, direction, diskSize);
+
+    return 0;
+}
