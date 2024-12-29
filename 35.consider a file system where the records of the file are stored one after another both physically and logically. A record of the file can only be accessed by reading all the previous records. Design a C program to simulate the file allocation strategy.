@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_RECORDS 100
+
+// Structure to represent a file
+typedef struct {
+    int id;                 // Record ID
+    char data[50];          // Record data
+} Record;
+
+typedef struct {
+    Record records[MAX_RECORDS]; // Array to store records
+    int recordCount;            // Number of records in the file
+} File;
+
+// Function to initialize the file with records
+void initializeFile(File *file) {
+    file->recordCount = 5; // Set the number of records
+    
+    // Input embedded in the code
+    for (int i = 0; i < file->recordCount; i++) {
+        file->records[i].id = i + 1; // Assign sequential IDs
+        sprintf(file->records[i].data, "Record %d Data", i + 1); // Sample data
+    }
+}
+
+// Function to read records sequentially
+void readRecords(File *file, int recordId) {
+    printf("Reading records up to Record ID %d:\n", recordId);
+    for (int i = 0; i < file->recordCount; i++) {
+        printf("Record ID: %d, Data: %s\n", file->records[i].id, file->records[i].data);
+        if (file->records[i].id == recordId) {
+            break; // Stop once the target record is read
+        }
+    }
+}
+
+// Function to display all records in the file
+void displayFile(File *file) {
+    printf("\nAll Records in the File:\n");
+    for (int i = 0; i < file->recordCount; i++) {
+        printf("Record ID: %d, Data: %s\n", file->records[i].id, file->records[i].data);
+    }
+}
+
+int main() {
+    File file;
+
+    // Initialize the file with predefined records
+    initializeFile(&file);
+
+    // Display all records
+    displayFile(&file);
+
+    // Read records up to a specific ID (input within code)
+    int targetRecordId = 3; // Change this to test other cases
+    readRecords(&file, targetRecordId);
+
+    return 0;
+}
