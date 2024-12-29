@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void cscanDiskScheduling(int requests[], int n, int start, int diskSize) {
+    int totalMovement = 0;
+    int current = start;
+
+    // Sort the requests array
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (requests[j] > requests[j + 1]) {
+                int temp = requests[j];
+                requests[j] = requests[j + 1];
+                requests[j + 1] = temp;
+            }
+        }
+    }
+
+    printf("Disk Access Order:\n");
+
+    // Process requests greater than the start position
+    for (int i = 0; i < n; i++) {
+        if (requests[i] >= start) {
+            printf("%d ", requests[i]);
+            totalMovement += abs(current - requests[i]);
+            current = requests[i];
+        }
+    }
+
+    // Move to the end of the disk
+    totalMovement += abs(current - (diskSize - 1));
+    current = 0; // Jump to the beginning of the disk
+    printf("%d ", diskSize - 1);
+
+    // Process requests smaller than the start position
+    for (int i = 0; i < n; i++) {
+        if (requests[i] < start) {
+            printf("%d ", requests[i]);
+            totalMovement += abs(current - requests[i]);
+            current = requests[i];
+        }
+    }
+
+    printf("\nTotal Head Movement: %d\n", totalMovement);
+}
+
+int main() {
+    // Embedded input
+    int requests[] = {98, 183, 37, 122, 14, 124, 65, 67};
+    int n = sizeof(requests) / sizeof(requests[0]);
+    int start = 53;       // Initial position of the disk head
+    int diskSize = 200;   // Size of the disk (0 to 199)
+
+    printf("Requests: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", requests[i]);
+    }
+    printf("\nStarting Head Position: %d\n", start);
+
+    cscanDiskScheduling(requests, n, start, diskSize);
+
+    return 0;
+}
